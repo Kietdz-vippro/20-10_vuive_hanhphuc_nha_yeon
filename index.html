@@ -174,7 +174,7 @@ body {
     100% { opacity: 0.4; transform: scale(0.8) rotate(45deg); filter: brightness(1); }
 }
 
-/* CHỮ RƠI - NẰM TRÊN ẢNH */
+/* CHỮ RƠI */
 
 .falling-message {
     position: absolute;
@@ -362,7 +362,7 @@ body {
     100% { opacity: 0; transform: scale(0) rotate(45deg); }
 }
 
-/* PHONG THƯ - MẶC ĐỊNH ẨN */
+/* PHONG THƯ */
 
 #letterIcon {
     display: none;
@@ -617,6 +617,11 @@ body {
 
 <body>
 
+<!-- NHẠC NỀN -->
+<audio id="nhacNen" loop preload="auto">
+    <source src="nhac.mp3" type="audio/mpeg">
+</audio>
+
 <!-- TRANG 1 -->
 
 <div class="page" id="page1">
@@ -755,6 +760,23 @@ const openLetterButton = document.getElementById("openLetterButton");
 const envelopeArea = document.getElementById("envelopeArea");
 const paperWrap = document.getElementById("paperWrap");
 
+/* NHẠC NỀN */
+
+const nhacNen = document.getElementById("nhacNen");
+nhacNen.volume = 0.5;
+
+function batNhac() {
+    nhacNen.play().catch(function() {
+        console.log("Không phát được nhạc. Hãy kiểm tra file nhac.mp3.");
+    });
+}
+
+/* Thử phát nhạc khi mở trang */
+batNhac();
+
+/* Nếu trình duyệt chặn tự phát, phát khi người xem bấm */
+document.addEventListener("click", batNhac, { once: true });
+
 let transitioning = false;
 
 /* SAO TRẮNG NEON NỀN */
@@ -795,6 +817,8 @@ setInterval(function() {
 
 nextButton.addEventListener("click", function() {
     if (transitioning) return;
+
+    batNhac();
 
     transitioning = true;
     nextButton.disabled = true;
