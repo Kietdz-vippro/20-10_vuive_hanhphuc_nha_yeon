@@ -174,13 +174,13 @@ body {
     100% { opacity: 0.4; transform: scale(0.8) rotate(45deg); filter: brightness(1); }
 }
 
-/* CHỮ RƠI */
+/* CHỮ RƠI - NẰM TRÊN ẢNH */
 
 .falling-message {
     position: absolute;
     top: -100px;
     left: var(--left);
-    z-index: 2;
+    z-index: 20;
     color: white;
     font-size: clamp(14px, 2.3vw, 21px);
     white-space: nowrap;
@@ -692,11 +692,9 @@ body {
     </div>
 </div>
 
-<!-- PHONG THƯ: ẨN Ở TRANG 1 -->
+<!-- PHONG THƯ -->
 
 <button id="letterIcon" aria-label="Mở thư">💌</button>
-
-<!-- HỘP THƯ -->
 
 <div id="letterModal">
     <div class="letter-window">
@@ -834,7 +832,6 @@ nextButton.addEventListener("click", function() {
         cloudTransition.classList.remove("active", "shrink");
         cloudTransition.innerHTML = "";
 
-        /* SANG TRANG 2 MỚI HIỆN PHONG THƯ */
         letterIcon.classList.add("show-letter");
     }, 2100);
 });
