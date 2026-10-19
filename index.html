@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -173,7 +174,7 @@ body {
     100% { opacity: 0.4; transform: scale(0.8) rotate(45deg); filter: brightness(1); }
 }
 
-/* CHỮ RƠI - NẰM TRÊN ẢNH */
+/* CHỮ RƠI */
 
 .falling-message {
     position: absolute;
@@ -361,7 +362,7 @@ body {
     100% { opacity: 0; transform: scale(0) rotate(45deg); }
 }
 
-/* PHONG THƯ - MẶC ĐỊNH ẨN */
+/* PHONG THƯ */
 
 #letterIcon {
     display: none;
@@ -616,15 +617,10 @@ body {
 
 <body>
 
-<!-- NHẠC NỀN: đặt file nhac.mp3 cùng thư mục với index.html -->
-<audio id="nhacNen" loop preload="auto" playsinline>
-    <source src="./nhac.mp3" type="audio/mpeg">
+<!-- NHẠC NỀN -->
+<audio id="nhacNen" loop preload="auto">
+    <source src="nhac.mp3" type="audio/mpeg">
 </audio>
-
-<!-- Nút bật/tắt nhạc: cần bấm nếu trình duyệt chặn tự phát -->
-<button id="nutNhac" type="button" aria-label="Bật nhạc" style="position:fixed;right:16px;bottom:16px;z-index:99999;border:1px solid #ffd5e8;border-radius:999px;padding:11px 16px;background:rgba(70,8,38,.9);color:white;font: bold 14px Arial,sans-serif;box-shadow:0 0 14px #ff4fa3;cursor:pointer;">
-    🔇 Bật nhạc
-</button>
 
 <!-- TRANG 1 -->
 
@@ -763,38 +759,23 @@ const closeLetter = document.getElementById("closeLetter");
 const openLetterButton = document.getElementById("openLetterButton");
 const envelopeArea = document.getElementById("envelopeArea");
 const paperWrap = document.getElementById("paperWrap");
+
+/* NHẠC NỀN */
+
 const nhacNen = document.getElementById("nhacNen");
-const nutNhac = document.getElementById("nutNhac");
 nhacNen.volume = 0.5;
 
-// Trình duyệt thường chặn tự phát có tiếng. Nút này cho phép người xem bật nhạc.
 function batNhac() {
-    nhacNen.play().then(function() {
-        nutNhac.textContent = "🔊 Tắt nhạc";
-        nutNhac.setAttribute("aria-label", "Tắt nhạc");
-    }).catch(function() {
-        nutNhac.textContent = "🔇 Bật nhạc";
+    nhacNen.play().catch(function() {
+        console.log("Không phát được nhạc. Hãy kiểm tra file nhac.mp3.");
     });
 }
 
-function tatNhac() {
-    nhacNen.pause();
-    nutNhac.textContent = "🔇 Bật nhạc";
-    nutNhac.setAttribute("aria-label", "Bật nhạc");
-}
+/* Thử phát nhạc khi mở trang */
+batNhac();
 
-nutNhac.addEventListener("click", function(event) {
-    event.stopPropagation();
-    if (nhacNen.paused) batNhac();
-    else tatNhac();
-});
-
-// Thử tự phát; nếu bị chặn, người xem bấm nút 🔇 Bật nhạc.
-nhacNen.play().then(function() {
-    nutNhac.textContent = "🔊 Tắt nhạc";
-}).catch(function() {
-    nutNhac.textContent = "🔇 Bật nhạc";
-});
+/* Nếu trình duyệt chặn tự phát, phát khi người xem bấm */
+document.addEventListener("click", batNhac, { once: true });
 
 let transitioning = false;
 
@@ -838,6 +819,7 @@ nextButton.addEventListener("click", function() {
     if (transitioning) return;
 
     batNhac();
+
     transitioning = true;
     nextButton.disabled = true;
 
@@ -1043,7 +1025,7 @@ function explode(x, y) {
                 opacity: 1
             },
             {
-                transform: translate(${dx}px, ${dy}px) scale(0.2),
+                transform: `translate(${dx}px, ${dy}px) scale(0.2)`,
                 opacity: 0
             }
         ], {
