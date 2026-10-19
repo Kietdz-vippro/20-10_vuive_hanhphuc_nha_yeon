@@ -173,13 +173,13 @@ body {
     100% { opacity: 0.4; transform: scale(0.8) rotate(45deg); filter: brightness(1); }
 }
 
-/* CHỮ RƠI - NẰM TRÊN ẢNH */
+/* CHỮ RƠI */
 
 .falling-message {
     position: absolute;
     top: -100px;
     left: var(--left);
-    z-index: 20;
+    z-index: 2;
     color: white;
     font-size: clamp(14px, 2.3vw, 21px);
     white-space: nowrap;
@@ -189,8 +189,8 @@ body {
 }
 
 @keyframes fallingText {
-    from { top: -100px; }
-    to { top: 110%; }
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(0, calc(100vh + 220px), 0); }
 }
 
 @keyframes swayText {
@@ -216,14 +216,21 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    backface-visibility: hidden;
     border: 3px solid white;
     border-radius: 12px;
     box-shadow: 0 0 15px #ff8ac5, 0 0 30px #ff4fa3;
 }
 
 @keyframes fallingPhoto {
-    from { top: -190px; }
-    to { top: 110%; }
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(0, calc(100vh + 300px), 0); }
+}
+
+/* ẢNH NGANG: anh1, anh3, anh5 */
+.falling-photo.landscape {
+    width: clamp(125px, 18vw, 190px);
+    height: clamp(85px, 11vw, 125px);
 }
 
 @keyframes swayPhoto {
@@ -594,6 +601,11 @@ body {
         font-size: 14px;
     }
 
+    .falling-photo.landscape {
+        width: clamp(120px, 38vw, 155px);
+        height: clamp(80px, 25vw, 105px);
+    }
+
     .letter-window {
         padding: 20px 12px;
     }
@@ -615,16 +627,6 @@ body {
 </head>
 
 <body>
-
-<!-- NHẠC NỀN: đặt file nhac.mp3 cùng thư mục với index.html -->
-<audio id="nhacNen" loop preload="auto" playsinline>
-    <source src="./nhac.mp3" type="audio/mpeg">
-</audio>
-
-<!-- Nút bật/tắt nhạc: cần bấm nếu trình duyệt chặn tự phát -->
-<button id="nutNhac" type="button" aria-label="Bật nhạc" style="position:fixed;right:16px;bottom:16px;z-index:99999;border:1px solid #ffd5e8;border-radius:999px;padding:11px 16px;background:rgba(70,8,38,.9);color:white;font: bold 14px Arial,sans-serif;box-shadow:0 0 14px #ff4fa3;cursor:pointer;">
-    🔇 Bật nhạc
-</button>
 
 <!-- TRANG 1 -->
 
@@ -678,7 +680,7 @@ body {
 
         <!-- ẢNH RƠI -->
 
-        <div class="falling-photo" style="--left:15%;--duration:14s;--delay:0s">
+        <div class="falling-photo landscape" style="--left:15%;--duration:14s;--delay:0s">
             <img src="anh1.jpg" alt="Ảnh 1">
         </div>
 
@@ -686,7 +688,7 @@ body {
             <img src="anh2.jpg" alt="Ảnh 2">
         </div>
 
-        <div class="falling-photo" style="--left:40%;--duration:15s;--delay:6s">
+        <div class="falling-photo landscape" style="--left:40%;--duration:15s;--delay:6s">
             <img src="anh3.jpg" alt="Ảnh 3">
         </div>
 
@@ -694,16 +696,43 @@ body {
             <img src="anh4.jpg" alt="Ảnh 4">
         </div>
 
-        <div class="falling-photo" style="--left:55%;--duration:16s;--delay:12s">
+        <div class="falling-photo landscape" style="--left:55%;--duration:16s;--delay:12s">
             <img src="anh5.jpg" alt="Ảnh 5">
+        </div>
+
+        <div class="falling-photo" style="--left:28%;--duration:17s;--delay:5s">
+            <img src="anh6.jpg" alt="Ảnh 6" loading="lazy">
+        </div>
+
+        <div class="falling-photo" style="--left:65%;--duration:15s;--delay:8s">
+            <img src="anh7.jpg" alt="Ảnh 7" loading="lazy">
+        </div>
+
+        <div class="falling-photo" style="--left:5%;--duration:18s;--delay:11s">
+            <img src="anh8.jpg" alt="Ảnh 8" loading="lazy">
+        </div>
+
+        <!-- Ảnh ngang 1, 3, 5 xuất hiện thường xuyên hơn -->
+        <div class="falling-photo landscape" style="--left:25%;--duration:14s;--delay:7s">
+            <img src="anh1.jpg" alt="Ảnh 1 - lần xuất hiện thêm">
+        </div>
+
+        <div class="falling-photo landscape" style="--left:62%;--duration:15s;--delay:10s">
+            <img src="anh3.jpg" alt="Ảnh 3 - lần xuất hiện thêm">
+        </div>
+
+        <div class="falling-photo landscape" style="--left:80%;--duration:16s;--delay:4s">
+            <img src="anh5.jpg" alt="Ảnh 5 - lần xuất hiện thêm">
         </div>
 
     </div>
 </div>
 
-<!-- PHONG THƯ -->
+<!-- PHONG THƯ: ẨN Ở TRANG 1 -->
 
 <button id="letterIcon" aria-label="Mở thư">💌</button>
+
+<!-- HỘP THƯ -->
 
 <div id="letterModal">
     <div class="letter-window">
@@ -763,44 +792,13 @@ const closeLetter = document.getElementById("closeLetter");
 const openLetterButton = document.getElementById("openLetterButton");
 const envelopeArea = document.getElementById("envelopeArea");
 const paperWrap = document.getElementById("paperWrap");
-const nhacNen = document.getElementById("nhacNen");
-const nutNhac = document.getElementById("nutNhac");
-nhacNen.volume = 0.5;
-
-// Trình duyệt thường chặn tự phát có tiếng. Nút này cho phép người xem bật nhạc.
-function batNhac() {
-    nhacNen.play().then(function() {
-        nutNhac.textContent = "🔊 Tắt nhạc";
-        nutNhac.setAttribute("aria-label", "Tắt nhạc");
-    }).catch(function() {
-        nutNhac.textContent = "🔇 Bật nhạc";
-    });
-}
-
-function tatNhac() {
-    nhacNen.pause();
-    nutNhac.textContent = "🔇 Bật nhạc";
-    nutNhac.setAttribute("aria-label", "Bật nhạc");
-}
-
-nutNhac.addEventListener("click", function(event) {
-    event.stopPropagation();
-    if (nhacNen.paused) batNhac();
-    else tatNhac();
-});
-
-// Thử tự phát; nếu bị chặn, người xem bấm nút 🔇 Bật nhạc.
-nhacNen.play().then(function() {
-    nutNhac.textContent = "🔊 Tắt nhạc";
-}).catch(function() {
-    nutNhac.textContent = "🔇 Bật nhạc";
-});
 
 let transitioning = false;
 
 /* SAO TRẮNG NEON NỀN */
 
 function createBackgroundStar() {
+    if (document.hidden) return;
     const star = document.createElement("div");
     star.className = "background-star";
 
@@ -837,7 +835,6 @@ setInterval(function() {
 nextButton.addEventListener("click", function() {
     if (transitioning) return;
 
-    batNhac();
     transitioning = true;
     nextButton.disabled = true;
 
@@ -874,6 +871,7 @@ nextButton.addEventListener("click", function() {
         cloudTransition.classList.remove("active", "shrink");
         cloudTransition.innerHTML = "";
 
+        /* SANG TRANG 2 MỚI HIỆN PHONG THƯ */
         letterIcon.classList.add("show-letter");
     }, 2100);
 });
@@ -912,6 +910,7 @@ document.addEventListener("keydown", function(event) {
 /* TIM BAY LÊN */
 
 function createHeart() {
+    if (document.hidden) return;
     const heart = document.createElement("div");
     heart.className = "heart";
 
@@ -936,6 +935,7 @@ setInterval(createHeart, 700);
 /* SAO LẤP LÁNH */
 
 function createSparkle() {
+    if (document.hidden) return;
     const sparkle = document.createElement("div");
     sparkle.className = "sparkle";
 
@@ -959,6 +959,7 @@ setInterval(createSparkle, 250);
 /* BÔNG TUYẾT RƠI */
 
 function createSnowflake() {
+    if (document.hidden) return;
     const snow = document.createElement("div");
     snow.className = "snowflake";
 
@@ -984,6 +985,7 @@ setInterval(createSnowflake, 250);
 /* PHÁO HOA */
 
 function launchFirework() {
+    if (document.hidden) return;
     const x = 10 + Math.random() * 80;
     const startY = window.innerHeight + 10;
     const endY = window.innerHeight * (0.15 + Math.random() * 0.35);
