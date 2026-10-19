@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -180,7 +179,7 @@ body {
     position: absolute;
     top: -100px;
     left: var(--left);
-    z-index: 20;
+    z-index: 2;
     color: white;
     font-size: clamp(14px, 2.3vw, 21px);
     white-space: nowrap;
@@ -190,8 +189,8 @@ body {
 }
 
 @keyframes fallingText {
-    from { top: -100px; }
-    to { top: 110%; }
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(0, calc(100vh + 220px), 0); }
 }
 
 @keyframes swayText {
@@ -217,14 +216,15 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    backface-visibility: hidden;
     border: 3px solid white;
     border-radius: 12px;
     box-shadow: 0 0 15px #ff8ac5, 0 0 30px #ff4fa3;
 }
 
 @keyframes fallingPhoto {
-    from { top: -190px; }
-    to { top: 110%; }
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(0, calc(100vh + 300px), 0); }
 }
 
 @keyframes swayPhoto {
@@ -362,7 +362,7 @@ body {
     100% { opacity: 0; transform: scale(0) rotate(45deg); }
 }
 
-/* PHONG THƯ */
+/* PHONG THƯ - MẶC ĐỊNH ẨN */
 
 #letterIcon {
     display: none;
@@ -617,11 +617,6 @@ body {
 
 <body>
 
-<!-- NHẠC NỀN -->
-<audio id="nhacNen" loop preload="auto">
-    <source src="nhac.mp3" type="audio/mpeg">
-</audio>
-
 <!-- TRANG 1 -->
 
 <div class="page" id="page1">
@@ -697,9 +692,11 @@ body {
     </div>
 </div>
 
-<!-- PHONG THƯ -->
+<!-- PHONG THƯ: ẨN Ở TRANG 1 -->
 
 <button id="letterIcon" aria-label="Mở thư">💌</button>
+
+<!-- HỘP THƯ -->
 
 <div id="letterModal">
     <div class="letter-window">
@@ -760,28 +757,12 @@ const openLetterButton = document.getElementById("openLetterButton");
 const envelopeArea = document.getElementById("envelopeArea");
 const paperWrap = document.getElementById("paperWrap");
 
-/* NHẠC NỀN */
-
-const nhacNen = document.getElementById("nhacNen");
-nhacNen.volume = 0.5;
-
-function batNhac() {
-    nhacNen.play().catch(function() {
-        console.log("Không phát được nhạc. Hãy kiểm tra file nhac.mp3.");
-    });
-}
-
-/* Thử phát nhạc khi mở trang */
-batNhac();
-
-/* Nếu trình duyệt chặn tự phát, phát khi người xem bấm */
-document.addEventListener("click", batNhac, { once: true });
-
 let transitioning = false;
 
 /* SAO TRẮNG NEON NỀN */
 
 function createBackgroundStar() {
+    if (document.hidden) return;
     const star = document.createElement("div");
     star.className = "background-star";
 
@@ -817,8 +798,6 @@ setInterval(function() {
 
 nextButton.addEventListener("click", function() {
     if (transitioning) return;
-
-    batNhac();
 
     transitioning = true;
     nextButton.disabled = true;
@@ -856,6 +835,7 @@ nextButton.addEventListener("click", function() {
         cloudTransition.classList.remove("active", "shrink");
         cloudTransition.innerHTML = "";
 
+        /* SANG TRANG 2 MỚI HIỆN PHONG THƯ */
         letterIcon.classList.add("show-letter");
     }, 2100);
 });
@@ -894,6 +874,7 @@ document.addEventListener("keydown", function(event) {
 /* TIM BAY LÊN */
 
 function createHeart() {
+    if (document.hidden) return;
     const heart = document.createElement("div");
     heart.className = "heart";
 
@@ -918,6 +899,7 @@ setInterval(createHeart, 700);
 /* SAO LẤP LÁNH */
 
 function createSparkle() {
+    if (document.hidden) return;
     const sparkle = document.createElement("div");
     sparkle.className = "sparkle";
 
@@ -941,6 +923,7 @@ setInterval(createSparkle, 250);
 /* BÔNG TUYẾT RƠI */
 
 function createSnowflake() {
+    if (document.hidden) return;
     const snow = document.createElement("div");
     snow.className = "snowflake";
 
@@ -966,6 +949,7 @@ setInterval(createSnowflake, 250);
 /* PHÁO HOA */
 
 function launchFirework() {
+    if (document.hidden) return;
     const x = 10 + Math.random() * 80;
     const startY = window.innerHeight + 10;
     const endY = window.innerHeight * (0.15 + Math.random() * 0.35);
